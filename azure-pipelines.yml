@@ -85,7 +85,7 @@ stages:
             inputs:
               azureSubscription: 'Pipeline-project'
               mavenPomFile: 'pom.xml'
-              goals: 'package'
+              goals: 'deploy'
               publishJUnitResults: true
               testResultsFiles: '**/surefire-reports/TEST-*.xml'
               javaHomeOption: 'JDKVersion'
