@@ -73,7 +73,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-       <repositories>
+       <distributionManagement>
          <repository>
             <id>maven</id>
             <url>https://pkgs.dev.azure.com/gamertech996/PostmanAPITesting/_packaging/maven/maven/v1</url>
@@ -84,7 +84,7 @@
                 <enabled>true</enabled>
             </snapshots>
          </repository>
-    </repositories>
+    </distributionManagement>
     <build>
       
         <plugins>
