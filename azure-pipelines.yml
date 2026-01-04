@@ -85,7 +85,7 @@ stages:
             inputs:
               azureSubscription: 'Pipeline-project'
               mavenPomFile: 'pom.xml'
-              goals: 'deploy'
+              goals: 'package'
               publishJUnitResults: true
               testResultsFiles: '**/surefire-reports/TEST-*.xml'
               javaHomeOption: 'JDKVersion'
@@ -107,3 +107,5 @@ stages:
               repository: 'gamertech1/bank-app'
               command: 'buildAndPush'
               Dockerfile: '**/Dockerfile'
+              tags: latest
+             
