@@ -59,3 +59,19 @@ stages:
           - task: SonarQubeAnalyze@8
             inputs:
               jdkversion: 'JAVA_HOME_17_X64'
+      - job: snyk
+        steps:
+        - script: |
+                  snyk --version
+                  npm install -g snyk-to-html
+                  [ -f mvnw ] && chmod +x mvnw
+                  mkdir -p result
+                  snyk auth $SNYK_TOKEN
+                  snyk test --all-projects --json-file-output=result/oss.json
+                  snyk code test --sarif-file-output=result/sast.sarif
+                  snyk-to-html -o result/oss.html < result/oss.json
+                  snyk monitor --all-projects
+          env:
+            SNYK_TOKEN: $(SNYK_TOKEN)
+            continueOnError: true
+            displayName: 'Security Scan (Snyk)'
