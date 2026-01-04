@@ -119,5 +119,12 @@ stages:
     jobs:
       - job: deploy_To_Kubernetes
         steps:
+          - task: KubernetesManifest@1
+            inputs:
+              action: 'deploy'
+              connectionType: 'kubernetesServiceConnection'
+              kubernetesServiceConnection: 'aks'
+              namespace: 'default'
+              manifests: 'deployment.yaml'
           
              
