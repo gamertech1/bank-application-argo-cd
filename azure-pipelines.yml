@@ -25,6 +25,7 @@ stages:
               effectivePomSkip: false
               sonarQubeRunAnalysis: false
       - job: test
+        dependsOn: maven
         steps:
         - task: Maven@4
           inputs:
@@ -39,11 +40,13 @@ stages:
             effectivePomSkip: false
             sonarQubeRunAnalysis: false
       - job: trivy
+        dependsOn: test
         steps:
           - task: CmdLine@2
             inputs:
               script: 'trivy fs --format table -o fs.html .'
       - job: sonarQube
+        dependsOn: trivy
         steps:
           - task: SonarQubePrepare@8
             inputs:
@@ -54,13 +57,11 @@ stages:
               cliProjectName: 'BankApp'
               cliSources: '.'
               extraProperties: 'sonar.java.binaries=.'
-      - job: sonar
-        dependsOn: sonarQube
-        steps:
           - task: SonarQubeAnalyze@8
             inputs:
               jdkversion: 'JAVA_HOME_17_X64'
       - job: snyk
+        dependsOn: sonarQube
         steps:
         - script: |
                   snyk --version
