@@ -29,7 +29,7 @@ metadata:
   labels:
     app: bank-app
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   selector:
     app: bank-app
   ports:
