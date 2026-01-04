@@ -90,7 +90,7 @@ stages:
               testResultsFiles: '**/surefire-reports/TEST-*.xml'
               javaHomeOption: 'JDKVersion'
               mavenVersionOption: 'Default'
-              mavenAuthenticateFeed: false
+              mavenAuthenticateFeed: true
               effectivePomSkip: false
               sonarQubeRunAnalysis: false
           - task: MavenAuthenticate@0
