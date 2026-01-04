@@ -1,0 +1,40 @@
+trigger:
+- none
+
+pool:
+  name: Pipeline-2
+  demands:
+    - agent.name -equals Agent-1
+
+stages:
+  - stage: complie
+    displayName: Maven Code Quality Check
+    jobs:
+      - job: maven
+        steps:
+          - task: Maven@4
+            inputs:
+              azureSubscription: 'Pipeline-project'
+              mavenPomFile: 'pom.xml'
+              goals: 'compile'
+              publishJUnitResults: true
+              testResultsFiles: '**/surefire-reports/TEST-*.xml'
+              javaHomeOption: 'JDKVersion'
+              mavenVersionOption: 'Default'
+              mavenAuthenticateFeed: false
+              effectivePomSkip: false
+              sonarQubeRunAnalysis: false
+      - job: test
+        steps:
+        - task: Maven@4
+          inputs:
+            azureSubscription: 'Pipeline-project'
+            mavenPomFile: 'pom.xml'
+            goals: 'test'
+            publishJUnitResults: true
+            testResultsFiles: '**/surefire-reports/TEST-*.xml'
+            javaHomeOption: 'JDKVersion'
+            mavenVersionOption: 'Default'
+            mavenAuthenticateFeed: false
+            effectivePomSkip: false
+            sonarQubeRunAnalysis: false
