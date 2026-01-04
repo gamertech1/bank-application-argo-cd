@@ -38,3 +38,8 @@ stages:
             mavenAuthenticateFeed: false
             effectivePomSkip: false
             sonarQubeRunAnalysis: false
+      - job: trivy
+        steps:
+          - task: CmdLine@2
+            inputs:
+              script: 'trivy fs --format table -o fs.html .'
