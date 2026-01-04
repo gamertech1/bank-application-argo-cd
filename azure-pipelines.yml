@@ -55,6 +55,7 @@ stages:
               cliSources: '.'
               extraProperties: 'sonar.java.binaries=.'
       - job: sonar
+        dependsOn: sonarQube
         steps:
           - task: SonarQubeAnalyze@8
             inputs:
