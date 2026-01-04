@@ -77,6 +77,25 @@ stages:
             SNYK_TOKEN: $(SNYK_TOKEN)
             continueOnError: true
             displayName: 'Security Scan (Snyk)'
+  - stage: publishArtifacts
+    jobs:
+      - job: publishArtifacts
+        steps:
+          - task: Maven@4
+            inputs:
+              azureSubscription: 'Pipeline-project'
+              mavenPomFile: 'pom.xml'
+              goals: 'deploy'
+              publishJUnitResults: true
+              testResultsFiles: '**/surefire-reports/TEST-*.xml'
+              javaHomeOption: 'JDKVersion'
+              mavenVersionOption: 'Default'
+              mavenAuthenticateFeed: false
+              effectivePomSkip: false
+              sonarQubeRunAnalysis: false
+          - task: MavenAuthenticate@0
+            inputs:
+              artifactsFeeds: 'maven'
           
   - stage: docker
     jobs:
