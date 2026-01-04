@@ -81,6 +81,9 @@ stages:
     jobs:
       - job: publishArtifacts
         steps:
+          - task: MavenAuthenticate@0
+            inputs:
+              artifactsFeeds: 'maven'
           - task: Maven@4
             inputs:
               azureSubscription: 'Pipeline-project'
@@ -93,9 +96,7 @@ stages:
               mavenAuthenticateFeed: true
               effectivePomSkip: false
               sonarQubeRunAnalysis: false
-          - task: MavenAuthenticate@0
-            inputs:
-              artifactsFeeds: 'maven'
+
           
   - stage: docker
     jobs:
