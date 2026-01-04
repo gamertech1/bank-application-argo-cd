@@ -77,3 +77,14 @@ stages:
             SNYK_TOKEN: $(SNYK_TOKEN)
             continueOnError: true
             displayName: 'Security Scan (Snyk)'
+          
+  - stage: docker
+    jobs:
+      - job: dockerbuildandpush
+        steps:
+          - task: Docker@2
+            inputs:
+              containerRegistry: 'Dockerhub-pipeline'
+              repository: 'gamertech1/bank-app'
+              command: 'buildAndPush'
+              Dockerfile: '**/Dockerfile'
