@@ -109,4 +109,15 @@ stages:
               command: 'buildAndPush'
               Dockerfile: '**/Dockerfile'
               tags: latest
+      - job: trivyImageScan
+        dependsOn: dockerbuildandpush
+        steps:
+          - task: CmdLine@2
+            inputs:
+              script: 'trivy image --format table -o image.html gamertech1/bank-app:latest'
+  - stage: deploy_To_Kubernetes
+    jobs:
+      - job: deploy_To_Kubernetes
+        steps:
+          
              
