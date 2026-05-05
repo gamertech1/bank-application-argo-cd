@@ -1,0 +1,31 @@
+name: app-ci-cd
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  stage-1-build-test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: code checkout
+      uses: actions/checkout@v4
+
+    - name: setup java JDK
+      uses: actions/setup-java@v5.2.0
+      with:
+        java-version: '17'
+        java-distribution: 'temurin' 
+
+    - name: maven 
+      run: mvn clean package
+
+    - name: maven build test continue-on-error
+      uses: 
+        
+    
