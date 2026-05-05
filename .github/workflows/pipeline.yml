@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ "master" ]
 
+env:
+  IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/bank-app-argo-cd
+
 jobs:
 
   stage-1-build-test:
@@ -23,7 +26,43 @@ jobs:
         distribution: 'temurin' 
 
     - name: maven 
-      run: mvn clean package
+      run: mvn clean package  
+
+    - name: trivy fs scan
+      uses: aquasecurity/trivy-action@v0.36.0
+      with:
+       scan-type: 'fs'
+       scan-ref: '.'
+
+  stage-2-docker-build-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: code checkout
+        uses: actions/checkout@v4
+
+      - name: docker-hub login
+        uses: docker/login-action@v4.1.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOKERHUB_PASSWORD }}
+
+      - name: docker build
+        run: |
+         docker build -t $IMAGE_NAME:${{ github.sha }} .
+
+      - name: image scan
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+      - name: image push
+        run: |
+         docker push $IMAGE_NAME:${{ github.sha }}
+        
+       
+        
+      
+      
 
         
     
