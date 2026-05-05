@@ -25,7 +25,6 @@ jobs:
     - name: maven 
       run: mvn clean package
 
-    - name: maven build test continue-on-error
-      uses: 
         
     
+  
