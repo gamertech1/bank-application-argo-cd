@@ -20,7 +20,7 @@ jobs:
       uses: actions/setup-java@v5.2.0
       with:
         java-version: '17'
-        java-distribution: 'temurin' 
+        distribution: 'temurin' 
 
     - name: maven 
       run: mvn clean package
