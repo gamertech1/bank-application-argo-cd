@@ -46,9 +46,14 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
+      - name: Set vars
+        run: |
+          echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+          echo "TIMESTAMP=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+
       - name: docker build
         run: |
-         docker build -t $IMAGE_NAME:${{ github.sha }} .
+         docker build -t $IMAGE_NAME:${{ env.TIMESTAMP }}-${{ env.SHORT_SHA }} .
 
       - name: image scan
         uses: aquasecurity/trivy-action@v0.36.0
