@@ -59,11 +59,11 @@ jobs:
       - name: image scan
         uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          image-ref: ${{ env.IMAGE_NAME }}:${{ env.TIMESTAMP }}-${{ env.SHORT_SHA }} .
 
       - name: image push
         run: |
-         docker push $IMAGE_NAME:${{ github.sha }}
+         docker push $IMAGE_NAME:${{ env.TIMESTAMP }}-${{ env.SHORT_SHA }} .
         
        
         
