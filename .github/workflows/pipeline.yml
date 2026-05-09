@@ -108,7 +108,9 @@ jobs:
           
   stage-4-deploy-prod:
     runs-on: ubuntu-latest
-    needs: stage-3-deploy-dev
+    needs:
+     - stage-2-docker-build-push
+     - stage-3-deploy-dev
     environment: prod
     env:
       IMAGE_TAG: ${{ needs.stage-2-docker-build-push.outputs.image_tag }}
