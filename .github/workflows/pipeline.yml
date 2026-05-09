@@ -52,7 +52,8 @@ jobs:
       - name: Set vars
         id: vars
         run: |
-          echo "IMAGE_TAG=$(date +%Y%m%d%H%M%S)-${GITHUB_SHA::7}" >> $GITHUB_ENV
+          IMAGE_TAG="$(date +%Y%m%d%H%M%S)-${GITHUB_SHA::7}"
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
           echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
 
       - name: docker build
