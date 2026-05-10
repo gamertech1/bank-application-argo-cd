@@ -74,80 +74,24 @@ jobs:
     runs-on: ubuntu-latest
     needs: stage-2-docker-build-push
     environment: dev
-    env:
-      IMAGE_TAG: ${{ needs.stage-2-docker-build-push.outputs.image_tag }}
-    steps:
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.GITOPS_REPO_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-  
-      - name: Clone GitOps repo
-        run: |
-          git clone git@github.com:gamertech1/bank-app-gitops-config.git
-      - name: Install yq
-        run: |
-          sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
-          sudo chmod +x /usr/local/bin/yq
-          
-      - name: Update image tag
-        run: |
-          cd bank-app-gitops-config
-          yq -i ".image.tag = \"${{ env.IMAGE_TAG }}\"" environments/dev/values.yaml
-  
-      - name: Commit changes
-        run: |
-          cd bank-app-gitops-config
-          git config user.email "github-actions@github.com"
-          git config user.name "github-actions"
-          git add .
-          git commit -m "Update image to ${{ env.IMAGE_TAG }}" || echo "No changes"
-          git push
-          
+    uses: ./.github/workflows/update-image-tag.yml
+    with:
+      image-tag: ${{ needs.stage-2-docker-build-push.outputs.image_tag }}
+      env: dev
+      value_file: environments/dev/values.yaml
+    secrets:
+      GITOPS_REPO_PRIVATE_KEY: ${{ secrets.GITOPS_REPO_PRIVATE_KEY }}
   stage-4-deploy-prod:
     runs-on: ubuntu-latest
     needs:
      - stage-2-docker-build-push
      - stage-3-deploy-dev
     environment: prod
-    env:
-      IMAGE_TAG: ${{ needs.stage-2-docker-build-push.outputs.image_tag }}
-    steps:
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.GITOPS_REPO_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-  
-      - name: Clone GitOps repo
-        run: |
-          git clone git@github.com:gamertech1/bank-app-gitops-config.git
-      - name: Install yq
-        run: |
-          sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
-          sudo chmod +x /usr/local/bin/yq
-          
-      - name: Update image tag
-        run: |
-          cd bank-app-gitops-config
-          yq -i ".image.tag = \"${{ env.IMAGE_TAG }}\"" environments/prod/values.yaml
-  
-      - name: Commit changes
-        run: |
-          cd bank-app-gitops-config
-          git config user.email "github-actions@github.com"
-          git config user.name "github-actions"
-          git add .
-          git commit -m "Update image to ${{ env.IMAGE_TAG }}" || echo "No changes"
-          git push      
-       
-        
-      
-      
+    uses: ./.github/workflows/update-image-tag.yml
+    with:
+      image-tag: ${{ needs.stage-2-docker-build-push.outputs.image_tag }}
+      env: dev
+      value_file: environments/prod/values.yaml
+    secrets:
+      GITOPS_REPO_PRIVATE_KEY: ${{ secrets.GITOPS_REPO_PRIVATE_KEY }}
 
-        
-    
-  
