@@ -74,7 +74,7 @@ jobs:
     needs: stage-2-docker-build-push
     uses: ./.github/workflows/update-image-tag.yml
     with:
-      image-tag: ${{ needs.stage-2-docker-build-push.outputs.image_tag }}
+      image_tag: ${{ needs.stage-2-docker-build-push.outputs.image_tag }}
       environment: dev
       value_file: environments/dev/values.yaml
     secrets:
@@ -86,7 +86,7 @@ jobs:
      - stage-3-deploy-dev
     uses: ./.github/workflows/update-image-tag.yml
     with:
-      image-tag: ${{ needs.stage-2-docker-build-push.outputs.image_tag }}
+      image_tag: ${{ needs.stage-2-docker-build-push.outputs.image_tag }}
       environment: prod
       value_file: environments/prod/values.yaml
     secrets:
