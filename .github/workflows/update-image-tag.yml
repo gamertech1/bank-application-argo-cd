@@ -14,6 +14,11 @@ on:
       value_file:
         required: true
         type: string
+        
+      gitops_repo:
+        required: true
+        type: string
+        
     secrets:
       GITOPS_REPO_PRIVATE_KEY:
         required: true
@@ -32,7 +37,7 @@ jobs:
         
      - name: clone repo
        run: |
-        git clone git@github.com:gamertech1/bank-app-gitops-config.git
+        git clone git@github.com:${{  inputs.gitops_repo  }}.git
         
      - name: Install yq
        run: |
