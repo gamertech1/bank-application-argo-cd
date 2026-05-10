@@ -1,0 +1,56 @@
+name: update-image-tag
+
+on: 
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+     
+      image_tag:
+        required: true
+        type: string
+    
+      value_file:
+        required: true
+        type: string
+    secrets:
+      GITOPS_REPO_PRIVATE_KEY:
+        required: true
+
+jobs: 
+  update-gitops-key:
+    runs-on: ubuntu-latest
+    steps:
+     - name: Setup SSH
+       run: |
+        mkdir -p ~/.ssh
+        echo "${{  secrets.GITOPS_REPO_PRIVATE_KEY  }}" >> ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
+        
+     - name: clone repo
+       run: |
+        git clone git@github.com:gamertech1/bank-app-gitops-config.git
+        
+     - name: Install yq
+       run: |
+          sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
+          sudo chmod +x /usr/local/bin/yq
+       
+     - name: update image tag
+       run: |
+        REPO_NAME=$(basename ${{ inputs.gitops_repo }})
+        cd $REPO_NAME
+        yq -i ".image.tag = \"${{ inputs.image_tag}} \"" ${{ inputs.value_file}}
+       
+     - name: commit & push the changes
+       run: |
+        REPO_NAME=$(basename ${{ inputs.gitops_repo }})
+        cd $REPO_NAME
+        git config user.email "github-actions@github.com"
+        git config user.name "github-actions"
+        git add .
+        git commit -m "update image tag in /"${{ inputs.environment  }}\""
+        git push
+       
