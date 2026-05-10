@@ -71,27 +71,23 @@ jobs:
          
 
   stage-3-deploy-dev:
-    runs-on: ubuntu-latest
     needs: stage-2-docker-build-push
-    environment: dev
     uses: ./.github/workflows/update-image-tag.yml
     with:
       image-tag: ${{ needs.stage-2-docker-build-push.outputs.image_tag }}
-      env: dev
+      environment: dev
       value_file: environments/dev/values.yaml
     secrets:
       GITOPS_REPO_PRIVATE_KEY: ${{ secrets.GITOPS_REPO_PRIVATE_KEY }}
+      
   stage-4-deploy-prod:
-    runs-on: ubuntu-latest
     needs:
      - stage-2-docker-build-push
      - stage-3-deploy-dev
-    environment: prod
     uses: ./.github/workflows/update-image-tag.yml
     with:
       image-tag: ${{ needs.stage-2-docker-build-push.outputs.image_tag }}
-      env: dev
+      environment: prod
       value_file: environments/prod/values.yaml
     secrets:
       GITOPS_REPO_PRIVATE_KEY: ${{ secrets.GITOPS_REPO_PRIVATE_KEY }}
-
