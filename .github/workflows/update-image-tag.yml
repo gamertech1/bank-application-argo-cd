@@ -21,6 +21,7 @@ on:
 jobs: 
   update-gitops-key:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     steps:
      - name: Setup SSH
        run: |
