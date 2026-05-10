@@ -48,7 +48,7 @@ jobs:
        run: |
         REPO_NAME=$(basename ${{ inputs.gitops_repo }})
         cd $REPO_NAME
-        yq -i ".image.tag = \"${{ inputs.image_tag}} \"" ${{ inputs.value_file}}
+        yq -i ".image.tag = \"${{ inputs.image_tag}}\"" ${{ inputs.value_file}}
        
      - name: commit & push the changes
        run: |
