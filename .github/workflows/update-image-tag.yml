@@ -57,6 +57,18 @@ jobs:
         git config user.email "github-actions@github.com"
         git config user.name "github-actions"
         git add .
-        git commit -m "update image tag in /"${{ inputs.environment  }}\""
+        git commit -m "update image tag in ${{ inputs.environment  }}"
         git push
        
+
+
+
+
+
+
+
+
+
+
+
+
